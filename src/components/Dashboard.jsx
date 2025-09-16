@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchTasks = async () => {
     try {
@@ -20,14 +22,12 @@ const Dashboard = () => {
 
   const handleStatusUpdate = async (taskId, newStatus) => {
     try {
-        console.log(taskId,newStatus)
       const res = await axios.patch(
         `http://localhost:3000/updateTaskStatus/${taskId}`,
         { status: newStatus },
         { withCredentials: true }
       );
 
-      // Update state after successful update
       setTasks((prev) =>
         prev.map((task) =>
           task._id === taskId ? { ...task, status: res.data.data.status } : task
@@ -47,30 +47,53 @@ const Dashboard = () => {
   return (
     <div className="p-6 text-white">
       <h1 className="text-2xl font-bold mb-4">My Tasks</h1>
-      <div className="flex gap-4">
-        {tasks.map((task) => (
-          <div key={task._id} className="card bg-gray-800 p-4 shadow-md">
-            <h2 className="font-bold text-lg">{task.title}</h2>
-            <p className="text-gray-300">{task.description}</p>
-            <p className="mt-2">Due: {new Date(task.dueDate).toDateString()}</p>
-            <p className="mt-1">
-              <span className="font-semibold">Status:</span>{" "}
-              <span className="capitalize">{task.status}</span>
-            </p>
+     <div className="flex gap-4 flex-wrap">
+  {tasks.map((task) => {
+    // Define background color based on priority
+    let bgColor = "";
+    switch (task.priority) {
+      case "high":
+        bgColor = "bg-red-600";
+        break;
+      case "medium":
+        bgColor = "bg-yellow-600";
+        break;
+      case "low":
+        bgColor = "bg-green-600";
+        break;
+      default:
+        bgColor = "bg-gray-800";
+    }
 
-            {/* Dropdown for status update */}
-            <select
-              className="select select-bordered mt-3 w-full text-white border"
-              value={task.status}
-              onChange={(e) => handleStatusUpdate(task._id, e.target.value)}
-            >
-              <option value="pending">pending</option>
-              <option value="inprogress">inprogress</option>
-              <option value="completed">completed</option>
-            </select>
-          </div>
-        ))}
+    return (
+      <div
+        key={task._id}
+        className={`card ${bgColor} p-4 shadow-md cursor-pointer w-80`}
+        onClick={() => navigate(`/taskDetails/${task._id}`)}
+      >
+        <h2 className="font-bold text-lg">{task.title}</h2>
+        <p className="text-gray-300">{task.description}</p>
+        <p className="mt-2">Due: {new Date(task.dueDate).toDateString()}</p>
+        <p className="mt-1">
+          <span className="font-semibold">Status:</span>{" "}
+          <span className="capitalize">{task.status}</span>
+        </p>
+
+        <select
+          className="select select-bordered mt-3 w-full text-white border"
+          value={task.status}
+          onClick={(e) => e.stopPropagation()} // prevents card click
+          onChange={(e) => handleStatusUpdate(task._id, e.target.value)}
+        >
+          <option value="pending">pending</option>
+          <option value="inprogress">inprogress</option>
+          <option value="completed">completed</option>
+        </select>
       </div>
+    );
+  })}
+</div>
+
     </div>
   );
 };
