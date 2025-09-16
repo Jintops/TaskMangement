@@ -21,7 +21,11 @@ const Login = () => {
         withCredentials: true,
       })
       console.log(res.data)
-navigate('/dashboard')
+     if (res.data.data.role === "admin") {
+        navigate("/admindashboard");
+      } else {
+        navigate("/dashboard");
+      }
      
     } catch (err) {
       setError(err?.response?.data || "Something went wrong")

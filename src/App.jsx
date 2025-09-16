@@ -3,6 +3,7 @@ import Login from './components/Login'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Dashboard from './components/Dashboard'
+import AdiminDashboard from './components/AdiminDashboard'
 
 function App() {
 
@@ -11,10 +12,10 @@ function App() {
     <>
      <div>
         <Routes>
-          
-         
+                
              <Route path="/" element={<Login/>}></Route>
              <Route path="/dashboard" element={<Dashboard/>}></Route>
+             <Route path="/admindashboard" element={<AdiminDashboard/>}></Route>
         </Routes>
 
       </div>
