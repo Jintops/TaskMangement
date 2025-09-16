@@ -211,69 +211,80 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Tasks List */}
-    {/* Tasks List */}
+ 
 <div className="mt-10 bg-gray-800 p-6 rounded-xl shadow-lg">
   <h2 className="text-2xl font-semibold mb-4">📋 Tasks</h2>
   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    {tasks?.map((t) => (
-      <div
-        key={t._id}
-        className="bg-gray-700 p-4 rounded-lg shadow hover:shadow-xl transition"
-        onClick={() => navigate(`/taskDetails/${t._id}`)}
-      >
-        <h2 className="font-bold text-lg">{t.title}</h2>
-        <p className="mt-2">
-          <span className="font-semibold">Status:</span>{" "}
-          <span className="text-primary">{t.status}</span>
-        </p>
-        <p>
-          <span className="font-semibold">Assigned To:</span>{" "}
-          {t.assignedTo?.name || "Unknown"} ({t?.assignedTo?.emailId})
-        </p>
-        <p>
-          <span className="font-semibold">Priority:</span>{" "}
-          <span
-            className={
-              t.priority === "high"
-                ? "text-red-400"
-                : t.priority === "medium"
-                ? "text-yellow-400"
-                : "text-green-400"
-            }
-          >
-            {t.priority}
-          </span>
-        </p>
+    {tasks?.map((t) => {
+      // Determine background color based on priority
+      let bgColor = "";
+      switch (t.priority) {
+        case "high":
+          bgColor = "bg-red-600";
+          break;
+        case "medium":
+          bgColor = "bg-yellow-600";
+          break;
+        case "low":
+          bgColor = "bg-green-600";
+          break;
+        default:
+          bgColor = "bg-gray-800";
+      }
 
-        <div className="flex gap-2 mt-3">
-          <button
-            className="btn btn-sm btn-warning flex-1"
-            
-            onClick={(e) => {
-             e.stopPropagation()
-              setEditTask(t);
-              setTitle(t.title);
-              setDescription(t.description);
-              setDueDate(t.dueDate?.split("T")[0] || "");
-              setPriority(t.priority);
-            }}
-          >
-            ✏️ Edit Task
-          </button>
+      return (
+        <div
+          key={t._id}
+          className={`${bgColor} p-4 rounded-lg shadow hover:shadow-xl transition cursor-pointer`}
+          onClick={() => navigate(`/taskDetails/${t._id}`)}
+        >
+          <h2 className="font-bold text-lg">{t.title}</h2>
+          <p className="mt-2">
+            <span className="font-semibold">Status:</span>{" "}
+            <span className="text-primary">{t.status}</span>
+          </p>
+          <p>
+            <span className="font-semibold">Assigned To:</span>{" "}
+            {t.assignedTo?.name || "Unknown"} ({t?.assignedTo?.emailId})
+          </p>
 
-          <button
-            className="btn btn-sm btn-error flex-1"
-            onClick={(e) =>{handleDeleteTask(t._id),e.stopPropagation()}}
-          >
-            🗑 Delete Task
-          </button>
+          <p>
+            <span className="font-semibold">Due Date:</span>{" "}
+            {new Date(t.dueDate).toLocaleDateString()}
+          </p>
+          <div className="flex gap-2 mt-3">
+            <button
+              className="btn btn-sm btn-warning flex-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditTask(t);
+                setTitle(t.title);
+                setDescription(t.description);
+                setDueDate(t.dueDate?.split("T")[0] || "");
+                setPriority(t.priority);
+              }}
+            >
+              ✏️ Edit Task
+            </button>
+
+            <button
+              className="btn btn-sm btn-error flex-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteTask(t._id);
+              }}
+            >
+              🗑 Delete Task
+            </button>
+          </div>
         </div>
-      </div>
-    ))}
+      );
+    })}
   </div>
 </div>
-{/* Pagination */}
+
+
+
 <div className="flex justify-center gap-3 mt-6">
   <button
     className="btn btn-sm btn-primary"

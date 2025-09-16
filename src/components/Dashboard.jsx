@@ -49,7 +49,7 @@ const Dashboard = () => {
       <h1 className="text-2xl font-bold mb-4">My Tasks</h1>
      <div className="flex gap-4 flex-wrap">
   {tasks.map((task) => {
-    // Define background color based on priority
+ 
     let bgColor = "";
     switch (task.priority) {
       case "high":
@@ -68,26 +68,27 @@ const Dashboard = () => {
     return (
       <div
         key={task._id}
-        className={`card ${bgColor} p-4 shadow-md cursor-pointer w-80`}
+        className={`card ${bgColor} p-4 shadow-md cursor-pointer w-[500px] h-48 flex flex-row`}
         onClick={() => navigate(`/taskDetails/${task._id}`)}
       >
+        <div className="w-2/3">
         <h2 className="font-bold text-lg">{task.title}</h2>
-        <p className="text-gray-300">{task.description}</p>
+       
         <p className="mt-2">Due: {new Date(task.dueDate).toDateString()}</p>
         <p className="mt-1">
           <span className="font-semibold">Status:</span>{" "}
           <span className="capitalize">{task.status}</span>
         </p>
-
+    </div>
         <select
           className="select select-bordered mt-3 w-full text-white border"
           value={task.status}
-          onClick={(e) => e.stopPropagation()} // prevents card click
+          onClick={(e) => e.stopPropagation()} 
           onChange={(e) => handleStatusUpdate(task._id, e.target.value)}
         >
-          <option value="pending">pending</option>
-          <option value="inprogress">inprogress</option>
-          <option value="completed">completed</option>
+          <option className="hover:border"value="pending">pending</option>
+          <option className="hover:border" value="inprogress">inprogress</option>
+          <option className="hover:border" value="completed">completed</option>
         </select>
       </div>
     );
