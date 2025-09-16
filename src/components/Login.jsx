@@ -10,8 +10,7 @@ const Login = () => {
  
   const [error, setError] = useState("");
   const [isLogin, setIsLogin] = useState(true)
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -22,8 +21,8 @@ const Login = () => {
         withCredentials: true,
       })
       console.log(res.data)
-    //   dispatch(addUser(res.data))
-    //   return navigate("/feed")
+navigate('/dashboard')
+     
     } catch (err) {
       setError(err?.response?.data || "Something went wrong")
       console.log(err)
@@ -33,8 +32,8 @@ const Login = () => {
   const handleSignUp = async () => {
     try {
       const res = await axios.post("http://localhost:3000/signup", { name, emailId, password }, { withCredentials: true })
-    //   dispatch(addUser(res.data.data))
-    //   return navigate("/profile")
+   
+    navigate('/dashboard')
     } catch (err) {
       setError(err?.response?.data || "Something went wrong")
     }
